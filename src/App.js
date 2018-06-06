@@ -27,6 +27,8 @@ class App extends React.Component {
       const userObj = { username: this.state.username, password: this.state.password }
       const user = await loginService.login(userObj)
 
+      console.log("user from POST:", user)
+
       this.setState({ username: '', password: '', user })
 
       window.localStorage.setItem('loggedUser', JSON.stringify(user))
@@ -47,6 +49,7 @@ class App extends React.Component {
 
   logout = () => {
     window.localStorage.clear()
+    blogService.setToken(null)
     this.setState({user: null, username: '', password: ''})
   }
 
@@ -54,6 +57,15 @@ class App extends React.Component {
     blogService.getAll().then(blogs =>
       this.setState({ blogs })
     )
+
+    const userJSON = window.localStorage.getItem('loggedUser')
+    console.log("userJSON: ", userJSON)
+
+    if (userJSON && userJSON !== 'undefined') {
+      let user = JSON.parse(userJSON)
+      this.setState({ user })
+      blogService.setToken(user.token)
+    }
   }
 
   render() {
