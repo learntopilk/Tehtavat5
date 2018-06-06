@@ -29,6 +29,9 @@ class App extends React.Component {
 
       this.setState({ username: '', password: '', user })
 
+      window.localStorage.setItem('loggedUser', JSON.stringify(user))
+      blogService.setToken(user.token)
+
     } catch (err) {
       console.log(err)
       this.setState({ error: 'Käyttäjätunnus tahi salasana onpi virheellinen' })
@@ -42,6 +45,11 @@ class App extends React.Component {
     this.setState({ [event.target.name]: event.target.value })
   }
 
+  logout = () => {
+    window.localStorage.clear()
+    this.setState({user: null, username: '', password: ''})
+  }
+
   componentDidMount() {
     blogService.getAll().then(blogs =>
       this.setState({ blogs })
@@ -52,7 +60,7 @@ class App extends React.Component {
     if (this.state.user === null) {
       return (
         <div>
-          <h3 class="error">{this.state.error}</h3>
+          <h3 className="error">{this.state.error}</h3>
           <Login login={this.login} handleLoginFieldChange={this.handleLoginFieldChange} state={this.state} />
         </div>
       )
@@ -60,9 +68,11 @@ class App extends React.Component {
       return (
         <div>
           <h2>blogs</h2>
+          <button onClick={this.logout}>logout</button>
           {this.state.blogs.map(blog =>
             <Blog key={blog._id} blog={blog} />
           )}
+          
         </div>
       );
     }
