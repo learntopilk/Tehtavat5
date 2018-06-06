@@ -38,7 +38,7 @@ class App extends React.Component {
 
       window.localStorage.setItem('loggedUser', JSON.stringify(user))
       blogService.setToken(user.token)
-      
+
 
     } catch (err) {
       console.log(err)
@@ -56,16 +56,16 @@ class App extends React.Component {
   logout = () => {
     window.localStorage.clear()
     blogService.setToken(null)
-    this.setState({user: null, username: '', password: ''})
+    this.setState({ user: null, username: '', password: '' })
   }
 
   onBlogInputChange = (event) => {
     event.preventDefault()
-    this.setState( {[event.target.name]: event.target.value })
+    this.setState({ [event.target.name]: event.target.value })
   }
 
   setMessageWithTimeOut = (message) => {
-    this.setState({message}, () => {
+    this.setState({ message }, () => {
       setTimeout(() => { this.setState({ message: null }) }, 5000)
     })
   }
@@ -87,20 +87,23 @@ class App extends React.Component {
         blogs: this.state.blogs.concat(result),
         blogTitle: '',
         blogurl: '',
-        blogauthor: ''})
-        // TODO: SET MESSAGE AND TIMEOUT HERE
-        this.setMessageWithTimeOut(`Added blog with title ${result.title} from author ${result.author}`)
+        blogauthor: ''
+      })
+      // TODO: SET MESSAGE AND TIMEOUT HERE
+      this.setMessageWithTimeOut(`Added blog with title ${result.title} from author ${result.author}`)
     } catch (err) {
       console.log(err)
-      this.setState({error: "bad request..."})
-      setTimeout(() => {this.setState({error: null})}, 5000)
+      this.setState({ error: "bad request..." })
+      setTimeout(() => { this.setState({ error: null }) }, 5000)
     }
 
   }
 
   componentDidMount() {
-    blogService.getAll().then(blogs =>
+    blogService.getAll().then(blogs => {
       this.setState({ blogs })
+      console.log(blogs)
+    }
     )
 
     const userJSON = window.localStorage.getItem('loggedUser')
@@ -137,9 +140,9 @@ class App extends React.Component {
           <BlogForm state={this.state} blogInputChangeHandler={this.onBlogInputChange} onBlogSubmit={this.onBlogSubmit} />
           <h3>Previous blogs: </h3>
           {this.state.blogs.map(blog =>
-            <Blog key={blog._id} blog={blog} />
+            <Blog key={blog.id.concat(Date.now().toString)} blog={blog} />
           )}
-          
+
         </div>
       );
     }
