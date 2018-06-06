@@ -1,5 +1,6 @@
 import React from 'react'
 import Blog from './components/Blog'
+import Login from './components/Login'
 import blogService from './services/blogs'
 
 class App extends React.Component {
@@ -14,17 +15,23 @@ class App extends React.Component {
     blogService.getAll().then(blogs =>
       this.setState({ blogs })
     )
-  } 
+  }
 
   render() {
-    return (
-      <div>
-        <h2>blogs</h2>
-        {this.state.blogs.map(blog => 
-          <Blog key={blog._id} blog={blog}/>
-        )}
-      </div>
-    );
+    if (!this.state.token) {
+      return (
+        <Login />
+      )
+    } else {
+      return (
+        <div>
+          <h2>blogs</h2>
+          {this.state.blogs.map(blog =>
+            <Blog key={blog._id} blog={blog} />
+          )}
+        </div>
+      );
+    }
   }
 }
 
