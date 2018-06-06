@@ -14,6 +14,7 @@ class App extends React.Component {
       password: '',
       token: null,
       error: '',
+      message: '',
       user: null,
       blogtitle: '',
       blogauthor: '',
@@ -32,10 +33,12 @@ class App extends React.Component {
 
       console.log("user from POST:", user)
 
+      this.setMessageWithTimeOut(`Welcome, ${user.username}!`)
       this.setState({ username: '', password: '', user })
 
       window.localStorage.setItem('loggedUser', JSON.stringify(user))
       blogService.setToken(user.token)
+      
 
     } catch (err) {
       console.log(err)
@@ -61,14 +64,22 @@ class App extends React.Component {
     this.setState( {[event.target.name]: event.target.value })
   }
 
+  setMessageWithTimeOut = (message) => {
+    this.setState({message}, () => {
+      setTimeout(() => { this.setState({ message: null }) }, 5000)
+    })
+  }
+
   onBlogSubmit = async (event) => {
     event.preventDefault()
 
     const blog = {
       title: this.state.blogtitle,
-      author: this.state.author,
+      author: this.state.blogauthor,
       url: this.state.blogurl
     }
+
+    console.log("post to be made: ", blog)
 
     try {
       const result = await blogService.createBlogPost(blog)
@@ -78,6 +89,7 @@ class App extends React.Component {
         blogurl: '',
         blogauthor: ''})
         // TODO: SET MESSAGE AND TIMEOUT HERE
+        this.setMessageWithTimeOut(`Added blog with title ${result.title} from author ${result.author}`)
     } catch (err) {
       console.log(err)
       this.setState({error: "bad request..."})
@@ -111,6 +123,7 @@ class App extends React.Component {
       return (
         <div>
           <h3 className="error">{this.state.error}</h3>
+          <h3 className="message">{this.state.message}</h3>
           <Login login={this.login} handleLoginFieldChange={this.handleLoginFieldChange} state={this.state} />
         </div>
       )
@@ -120,6 +133,7 @@ class App extends React.Component {
           <h2>blogs</h2>
           <button onClick={this.logout}>logout</button>
           <h3 className="error">{this.state.error}</h3>
+          <h3 className="message">{this.state.message}</h3>
           <BlogForm state={this.state} blogInputChangeHandler={this.onBlogInputChange} onBlogSubmit={this.onBlogSubmit} />
           <h3>Previous blogs: </h3>
           {this.state.blogs.map(blog =>
