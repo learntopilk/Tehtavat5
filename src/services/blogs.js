@@ -3,18 +3,24 @@ const baseUrl = '/api/blogs'
 
 let token = null
 
-const setToken = (token) => {
-  token = `bearer ${token}`;
+const setToken = (newToken) => {
+  console.log("setting token...", newToken)
+  token = `bearer ${newToken}`;
+  console.log("token set: ", token)
 }
 const getAll = () => {
   const request = axios.get(baseUrl)
   return request.then(response => response.data)
 }
 
-const createBlogPost = (blogPost) => {
-  const config = {'Authorization': token}
+const createBlogPost = async (blogPost) => {
+  console.log("creating...", token)
+  const config = {
+    headers: {'authorization': token}
+  }
 
-  const response = axios.post(baseUrl, blogPost, config)
+  console.log("config: ", config)
+  const response = await axios.post(baseUrl, blogPost, config)
   return response.data
 }
 

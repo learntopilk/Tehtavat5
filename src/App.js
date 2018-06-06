@@ -3,18 +3,21 @@ import Blog from './components/Blog'
 import Login from './components/Login'
 import loginService from './services/login'
 import blogService from './services/blogs'
+import BlogForm from './components/BlogForm'
 
 class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       blogs: [],
-      newBlog: '',
       username: '',
       password: '',
       token: null,
       error: '',
-      user: null
+      user: null,
+      blogtitle: '',
+      blogauthor: '',
+      blogurl: ''
 
     }
   }
@@ -53,6 +56,36 @@ class App extends React.Component {
     this.setState({user: null, username: '', password: ''})
   }
 
+  onBlogInputChange = (event) => {
+    event.preventDefault()
+    this.setState( {[event.target.name]: event.target.value })
+  }
+
+  onBlogSubmit = async (event) => {
+    event.preventDefault()
+
+    const blog = {
+      title: this.state.blogtitle,
+      author: this.state.author,
+      url: this.state.blogurl
+    }
+
+    try {
+      const result = await blogService.createBlogPost(blog)
+      this.setState({
+        blogs: this.state.blogs.concat(result),
+        blogTitle: '',
+        blogurl: '',
+        blogauthor: ''})
+        // TODO: SET MESSAGE AND TIMEOUT HERE
+    } catch (err) {
+      console.log(err)
+      this.setState({error: "bad request..."})
+      setTimeout(() => {this.setState({error: null})}, 5000)
+    }
+
+  }
+
   componentDidMount() {
     blogService.getAll().then(blogs =>
       this.setState({ blogs })
@@ -64,11 +97,16 @@ class App extends React.Component {
     if (userJSON && userJSON !== 'undefined') {
       let user = JSON.parse(userJSON)
       this.setState({ user })
+      console.log("found token: ", user.token)
       blogService.setToken(user.token)
     }
   }
 
   render() {
+
+
+
+
     if (this.state.user === null) {
       return (
         <div>
@@ -81,6 +119,9 @@ class App extends React.Component {
         <div>
           <h2>blogs</h2>
           <button onClick={this.logout}>logout</button>
+          <h3 className="error">{this.state.error}</h3>
+          <BlogForm state={this.state} blogInputChangeHandler={this.onBlogInputChange} onBlogSubmit={this.onBlogSubmit} />
+          <h3>Previous blogs: </h3>
           {this.state.blogs.map(blog =>
             <Blog key={blog._id} blog={blog} />
           )}
