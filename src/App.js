@@ -152,7 +152,7 @@ class App extends React.Component {
             <BlogForm state={this.state} blogInputChangeHandler={this.onBlogInputChange} onBlogSubmit={this.onBlogSubmit} />
           </Togglable>
           <h3>Previous blogs: </h3>
-          {this.state.blogs.map(blog =>
+          {this.state.blogs.sort((a,b) => {return b.likes - a.likes}).map(blog =>
             <Blog key={blog.id.concat(Date.now().toString)} blog={blog} />
           )}
 
