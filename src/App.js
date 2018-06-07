@@ -24,6 +24,21 @@ class App extends React.Component {
       loginVisible: false
 
     }
+
+    this.deleteHandler = (id) => {
+      console.log(id)
+      let blogsToUpdate = []
+      for (let i = 0; i < this.state.blogs.length; i++) {
+        if (this.state.blogs[i].id === id) {
+        } else {
+          blogsToUpdate.push(this.state.blogs[i])
+        }
+      }
+      this.setState({ blogs: blogsToUpdate })
+    }
+
+
+
   }
 
   login = async (event) => {
@@ -57,9 +72,9 @@ class App extends React.Component {
   }
 
   toggleLoginVisibility = () => {
-    
-      this.setState({loginVisible: !this.state.loginVisible})
-    
+
+    this.setState({ loginVisible: !this.state.loginVisible })
+
   }
 
   logout = () => {
@@ -92,14 +107,17 @@ class App extends React.Component {
 
     try {
       const result = await blogService.createBlogPost(blog)
+
+      // Add real user info isntead of simple ID
+      let moddedRes = result
+      moddedRes.user = this.state.user
       this.setState({
         blogs: this.state.blogs.concat(result),
-        blogTitle: '',
+        blogtitle: '',
         blogurl: '',
         blogauthor: ''
-      })
-      // TODO: SET MESSAGE AND TIMEOUT HERE
-      this.setMessageWithTimeOut(`Added blog with title ${result.title} from author ${result.author}`)
+      }, () => {this.setMessageWithTimeOut(`Added blog with title ${result.title} from author ${result.author}`)})
+      
     } catch (err) {
       console.log(err)
       this.setState({ error: "bad request..." })
@@ -129,7 +147,7 @@ class App extends React.Component {
   render() {
 
 
-
+    console.log('user: ', this.state.user)
 
     if (this.state.user === null) {
       return (
@@ -152,8 +170,8 @@ class App extends React.Component {
             <BlogForm state={this.state} blogInputChangeHandler={this.onBlogInputChange} onBlogSubmit={this.onBlogSubmit} />
           </Togglable>
           <h3>Previous blogs: </h3>
-          {this.state.blogs.sort((a,b) => {return b.likes - a.likes}).map(blog =>
-            <Blog key={blog.id.concat(Date.now().toString)} blog={blog} />
+          {this.state.blogs.sort((a, b) => { return b.likes - a.likes }).map(blog =>
+            <Blog key={blog.id.concat(Date.now().toString)} handleDelete={this.deleteHandler} user={this.state.user} blog={blog} />
           )}
 
         </div>

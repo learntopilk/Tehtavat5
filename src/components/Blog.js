@@ -7,10 +7,9 @@ class Blog extends React.Component {
     this.state = {
       visible: false,
       blog: props.blog,
-      title: props.title,
-      author: props.author,
-      url: props.url
-
+      owner: props.blog.user,
+      current: props.user,
+      deleteHandler: props.handleDelete
     }
   }
 
@@ -20,6 +19,7 @@ class Blog extends React.Component {
 
   handleClick = async (e) => {
     e.preventDefault()
+
     const b = this.state.blog
     b.likes = this.state.blog.likes + 1
 
@@ -27,7 +27,21 @@ class Blog extends React.Component {
 
     const result = await blogService.updateBlogPost(b)
     console.log("result: ", result)
-    this.setState({blog: result}, () => {console.log("updated!")})
+    this.setState({ blog: result }, () => { console.log("updated!") })
+
+  }
+
+  remove = async (e) => {
+    if (window.confirm('Do you want to remove this blog post?')) {
+      e.preventDefault()
+      console.log("Deleting ", this.state.blog.id)
+
+      const res = await blogService.removeBlogPost(this.state.blog.id)
+      console.log('res: ', res)
+      
+      this.state.deleteHandler(this.state.blog.id)
+    }
+
   }
 
 
@@ -41,8 +55,8 @@ class Blog extends React.Component {
       margin: '5px'
     }
 
-    console.log("blog: ", this.state.blog)
-    //const hideWhenVisible = { display: this.state.visible ? 'none' : '' }
+    console.log('owner: ', this.state.owner, 'current: ', this.state.current)
+    const showIfOwnedByUser = {display: ((this.state.owner === null || this.state.owner === undefined || this.state.owner.username === this.state.current.username) && this.state.visible)? '' : 'none'}
     const showWhenVisible = { display: this.state.visible ? '' : 'none' }
     return (
       <div style={stil}>
@@ -51,6 +65,7 @@ class Blog extends React.Component {
         <p style={showWhenVisible}>Author: {this.state.blog.author}</p>
         <p style={showWhenVisible}>Address: {this.state.blog.url}</p>
         <div style={showWhenVisible}><span>likes: {this.state.blog.likes}</span><button onClick={this.handleClick}>like</button></div>
+        <button style={showIfOwnedByUser} onClick={this.remove}>Delete this</button>
 
 
       </div>
