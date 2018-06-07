@@ -1,9 +1,11 @@
 import React from 'react'
 import Blog from './components/Blog'
 import Login from './components/Login'
+import Togglable from './components/Togglable'
 import loginService from './services/login'
 import blogService from './services/blogs'
 import BlogForm from './components/BlogForm'
+
 
 class App extends React.Component {
   constructor(props) {
@@ -18,7 +20,8 @@ class App extends React.Component {
       user: null,
       blogtitle: '',
       blogauthor: '',
-      blogurl: ''
+      blogurl: '',
+      loginVisible: false
 
     }
   }
@@ -51,6 +54,12 @@ class App extends React.Component {
     event.preventDefault()
     console.log("1 ", event.target.value, " ", event.target.name)
     this.setState({ [event.target.name]: event.target.value })
+  }
+
+  toggleLoginVisibility = () => {
+    
+      this.setState({loginVisible: !this.state.loginVisible})
+    
   }
 
   logout = () => {
@@ -127,7 +136,9 @@ class App extends React.Component {
         <div>
           <h3 className="error">{this.state.error}</h3>
           <h3 className="message">{this.state.message}</h3>
-          <Login login={this.login} handleLoginFieldChange={this.handleLoginFieldChange} state={this.state} />
+          <Togglable buttonLabel="Login">
+            <Login login={this.login} handleLoginFieldChange={this.handleLoginFieldChange} state={this.state} visible={this.state.visible} />
+          </Togglable>
         </div>
       )
     } else {
