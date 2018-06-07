@@ -5,7 +5,8 @@ class Togglable extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            visible: false
+            visible: false,
+            buttonText : props.buttonText
         }
     }
 
@@ -20,7 +21,7 @@ class Togglable extends React.Component {
 
         return (
             < div >
-            <div style={hideWhenVisible}><button onClick={this.toggleVisibility}>login</button></div>
+            <div style={hideWhenVisible}><button onClick={this.toggleVisibility}>{this.state.buttonText}</button></div>
             <div style={showWhenVisible}>
                 {this.props.children}
                 <button onClick={this.toggleVisibility}>cancel</button>

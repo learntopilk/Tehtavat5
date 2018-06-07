@@ -136,7 +136,7 @@ class App extends React.Component {
         <div>
           <h3 className="error">{this.state.error}</h3>
           <h3 className="message">{this.state.message}</h3>
-          <Togglable buttonLabel="Login">
+          <Togglable buttonText="Login">
             <Login login={this.login} handleLoginFieldChange={this.handleLoginFieldChange} state={this.state} visible={this.state.visible} />
           </Togglable>
         </div>
@@ -148,7 +148,9 @@ class App extends React.Component {
           <button onClick={this.logout}>logout</button>
           <h3 className="error">{this.state.error}</h3>
           <h3 className="message">{this.state.message}</h3>
-          <BlogForm state={this.state} blogInputChangeHandler={this.onBlogInputChange} onBlogSubmit={this.onBlogSubmit} />
+          <Togglable buttonText="Submit new post">
+            <BlogForm state={this.state} blogInputChangeHandler={this.onBlogInputChange} onBlogSubmit={this.onBlogSubmit} />
+          </Togglable>
           <h3>Previous blogs: </h3>
           {this.state.blogs.map(blog =>
             <Blog key={blog.id.concat(Date.now().toString)} blog={blog} />
