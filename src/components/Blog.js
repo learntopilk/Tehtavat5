@@ -1,4 +1,5 @@
 import React from 'react'
+import blogService from '../services/blogs'
 
 class Blog extends React.Component {
   constructor(props) {
@@ -17,9 +18,16 @@ class Blog extends React.Component {
     this.setState({ visible: !this.state.visible })
   }
 
-  handleClick = (e) => {
+  handleClick = async (e) => {
     e.preventDefault()
-    this.setState
+    const b = this.state.blog
+    b.likes = this.state.blog.likes + 1
+
+    console.log("b: ", b)
+
+    const result = await blogService.updateBlogPost(b)
+    console.log("result: ", result)
+    this.setState({blog: result}, () => {console.log("updated!")})
   }
 
 
@@ -33,8 +41,8 @@ class Blog extends React.Component {
       margin: '5px'
     }
 
-    //console.log("blog: ", this.state.blog)
-    const hideWhenVisible = { display: this.state.visible ? 'none' : '' }
+    console.log("blog: ", this.state.blog)
+    //const hideWhenVisible = { display: this.state.visible ? 'none' : '' }
     const showWhenVisible = { display: this.state.visible ? '' : 'none' }
     return (
       <div style={stil}>
