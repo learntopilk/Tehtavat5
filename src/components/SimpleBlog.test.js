@@ -21,4 +21,25 @@ describe.only(<SimpleBlog />, () => {
         expect (likesDiv.text()).toContain(sBlog.likes.toString())
     })
 
+
+    it ('registers clicks of a button', () => {
+        const sBlog = {
+            title: 'my tes title',
+            author: 'Jest icle',
+            likes: 3
+        }
+        const mockHandler = jest.fn()
+
+        const blogC = shallow(<SimpleBlog blog={sBlog} onClick={mockHandler} />)
+
+        const butt = blogC.find('button')
+        butt.simulate('click')
+        butt.simulate('click')
+
+        expect(mockHandler.mock.calls.length).toBe(2)
+
+
+
+    })
+
 })

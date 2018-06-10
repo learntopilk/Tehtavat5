@@ -5,8 +5,6 @@ import Togglable from './components/Togglable'
 import loginService from './services/login'
 import blogService from './services/blogs'
 import BlogForm from './components/BlogForm'
-import SimpleBlog from './components/SimpleBlog'
-
 
 class App extends React.Component {
   constructor(props) {
