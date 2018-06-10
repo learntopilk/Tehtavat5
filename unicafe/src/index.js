@@ -81,6 +81,9 @@ class App extends React.Component {
         break
       case 'RESET':
         store.dispatch({ type: 'RESET' })
+        break
+      default:
+        break
     }
   }
 
