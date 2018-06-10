@@ -107,7 +107,7 @@ class App extends React.Component {
     try {
       const result = await blogService.createBlogPost(blog)
 
-      // Add real user info isntead of simple ID
+      // Add real user info instead of simple ID
       let moddedRes = result
       moddedRes.user = this.state.user
       this.setState({

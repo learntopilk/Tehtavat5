@@ -38,7 +38,7 @@ class Blog extends React.Component {
 
       const res = await blogService.removeBlogPost(this.state.blog.id)
       console.log('res: ', res)
-      
+
       this.state.deleteHandler(this.state.blog.id)
     }
 
@@ -56,16 +56,18 @@ class Blog extends React.Component {
     }
 
     console.log('owner: ', this.state.owner, 'current: ', this.state.current)
-    const showIfOwnedByUser = {display: ((this.state.owner === null || this.state.owner === undefined || this.state.owner.username === this.state.current.username) && this.state.visible)? '' : 'none'}
+    const showIfOwnedByUser = { display: ((this.state.owner === null || this.state.owner === undefined || this.state.owner.username === this.state.current.username) && this.state.visible) ? '' : 'none' }
     const showWhenVisible = { display: this.state.visible ? '' : 'none' }
     return (
       <div style={stil}>
 
-        <h5 onClick={this.toggleVisibility}>{this.state.blog.title}</h5>
+        <h5 onClick={this.toggleVisibility} className='toggleButton'>{this.state.blog.title}</h5>
         <p style={showWhenVisible}>Author: {this.state.blog.author}</p>
-        <p style={showWhenVisible}>Address: {this.state.blog.url}</p>
-        <div style={showWhenVisible}><span>likes: {this.state.blog.likes}</span><button onClick={this.handleClick}>like</button></div>
-        <button style={showIfOwnedByUser} onClick={this.remove}>Delete this</button>
+        <div style={showWhenVisible} className='togglableItem'>
+          <p style={showWhenVisible}>Address: {this.state.blog.url}</p>
+          <div style={showWhenVisible}><span>likes: {this.state.blog.likes}</span><button onClick={this.handleClick}>like</button></div>
+          <button style={showIfOwnedByUser} onClick={this.remove}>Delete this</button>
+        </div>
 
 
       </div>
