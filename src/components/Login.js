@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 const Login = ({ state, handleLoginFieldChange, login, visible }) => {
     //const hideWhenVisible = { display: visible ? 'none' : '' }
@@ -15,6 +16,12 @@ const Login = ({ state, handleLoginFieldChange, login, visible }) => {
 
         </div>
     )
+}
+
+Login.propTypes = {
+    state: PropTypes.object.isRequired,
+    handleLoginFieldChange: PropTypes.func.isRequired,
+    login: PropTypes.func.isRequired,
 }
 
 export default Login
