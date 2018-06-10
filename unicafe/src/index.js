@@ -1,28 +1,29 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { createStore } from 'redux'
+import feedbackReducer from './feedbackReducer';
 
-const feedbackReducer = (state = { pos: 0, neutr: 0, neg: 0 }, action) => {
-  let pos = state.pos
-  let neutr = state.neutr
-  let neg = state.neg
 
-  switch (action.type) {
-    case 'POSITIVE':
-      pos = pos + 1
-      return ({ pos, neutr, neg })
-    case 'NEUTRAL':
-      neutr = neutr + 1
-      return ({ pos, neutr, neg })
-    case 'NEGATIVE':
-      neg = neg + 1
-      return ({ pos, neutr, neg })
-  }
-}
-
+const store = createStore(feedbackReducer)
 
 const Statistiikka = () => {
-  const palautteita = 0
+
+  const state = store.getState()
+  const palautteita = state.total
+
+  const pos = store.getState().pos
+  const neg = store.getState().neg
+  let keskiarvo
+  let positiivisia
+
+  if (palautteita === 0) {
+    keskiarvo = 0.000
+    positiivisia = 0.00
+  } else {
+    keskiarvo = ((pos - neg) / palautteita).toFixed(3)
+    positiivisia = (pos / palautteita).toFixed(2)
+  }
+
 
   if (palautteita === 0) {
     return (
@@ -40,38 +41,51 @@ const Statistiikka = () => {
         <tbody>
           <tr>
             <td>hyvä</td>
-            <td></td>
+            <td>{store.getState().pos}</td>
           </tr>
           <tr>
             <td>neutraali</td>
-            <td></td>
+            <td>{store.getState().neutr}</td>
           </tr>
           <tr>
             <td>huono</td>
-            <td></td>
+            <td>{store.getState().neg}</td>
           </tr>
           <tr>
             <td>keskiarvo</td>
-            <td></td>
+            <td>{keskiarvo}</td>
           </tr>
           <tr>
             <td>positiivisia</td>
-            <td></td>
+            <td>{positiivisia}%</td>
           </tr>
         </tbody>
       </table>
 
-      <button>nollaa tilasto</button>
+      <button onClick={() => store.dispatch({ type: 'RESET' })}>nollaa tilasto</button>
     </div >
   )
 }
 
 class App extends React.Component {
   klik = (nappi) => () => {
-
+    switch (nappi) {
+      case 'GOOD':
+        store.dispatch({ type: 'POSITIVE' })
+        break
+      case 'OK':
+        store.dispatch({ type: 'NEUTRAL' })
+        break
+      case 'BAD':
+        store.dispatch({ type: 'NEGATIVE' })
+        break
+      case 'RESET':
+        store.dispatch({ type: 'RESET' })
+    }
   }
 
   render() {
+    console.log('rendered')
     return (
       <div>
         <h2>anna palautetta</h2>
@@ -83,5 +97,10 @@ class App extends React.Component {
     )
   }
 }
+const renderApp = () => { ReactDOM.render(<App />, document.getElementById('root')) }
 
-ReactDOM.render(<App />, document.getElementById('root'));
+renderApp()
+
+store.subscribe(() => {
+  renderApp()
+})
