@@ -16,3 +16,5 @@ const localStorageMock = {
 window.localStorage = localStorageMock
 
 configure({ adapter: new Adapter() })
+
+export default { localStorage }

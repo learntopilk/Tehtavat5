@@ -141,6 +141,7 @@ class App extends React.Component {
       this.setState({ user })
       console.log("found token: ", user.token)
       blogService.setToken(user.token)
+      console.log('updated Token')
     }
   }
 
