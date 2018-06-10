@@ -59,13 +59,13 @@ class Blog extends React.Component {
     const showIfOwnedByUser = { display: ((this.state.owner === null || this.state.owner === undefined || this.state.owner.username === this.state.current.username) && this.state.visible) ? '' : 'none' }
     const showWhenVisible = { display: this.state.visible ? '' : 'none' }
     return (
-      <div style={stil}>
+      <div style={stil} className='blogpost'>
 
         <h5 onClick={this.toggleVisibility} className='toggleButton'>{this.state.blog.title}</h5>
         <p style={showWhenVisible}>Author: {this.state.blog.author}</p>
         <div style={showWhenVisible} className='togglableItem'>
           <p style={showWhenVisible}>Address: {this.state.blog.url}</p>
-          <div style={showWhenVisible}><span>likes: {this.state.blog.likes}</span><button onClick={this.handleClick}>like</button></div>
+          <div style={showWhenVisible}><span>Likes: {this.state.blog.likes}</span><button onClick={this.handleClick}>like</button></div>
           <button style={showIfOwnedByUser} onClick={this.remove}>Delete this</button>
         </div>
 

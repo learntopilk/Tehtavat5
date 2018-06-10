@@ -3,7 +3,7 @@ import Blog from './Blog'
 import { shallow } from 'enzyme'
 
 
-describe.only('<Blog />', () => {
+describe.skip('<Blog />', () => {
 
     it('No details shown before first click', () => {
         const blogItem = {

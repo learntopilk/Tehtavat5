@@ -126,6 +126,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    console.log('getting blogs...')
     blogService.getAll().then(blogs => {
       this.setState({ blogs })
       console.log(blogs)

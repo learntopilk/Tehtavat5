@@ -3,7 +3,7 @@ import SimpleBlog from './SimpleBlog'
 import { shallow } from 'enzyme'
 
 
-describe.only(<SimpleBlog />, () => {
+describe.skip(<SimpleBlog />, () => {
     it('Renders SimpleBlog', () => {
         const sBlog = {
             title: "This is the test title",
