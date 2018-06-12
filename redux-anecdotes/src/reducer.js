@@ -25,12 +25,16 @@ const reducer = (state = initialState, action) => {
 
   switch (action.type) {
     case 'VOTE':
+    
       console.log("voting... ", 'action.data ', action.data)
+
       const id = action.data.id
       let current = state.find(a => a.id === id)
       const newer = {...current, votes: current.votes + 1}
+
       console.log('current:' , current)
       console.log('newer:' , newer)
+
       return state.map(anecdote => anecdote.id !== current.id ? anecdote : newer)
     case 'NEW_ANECDOTE':
       return [...state, action.data]
